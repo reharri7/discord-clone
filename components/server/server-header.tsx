@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import {ChevronDown, LogOut, PlusCircle, Settings, Trash, UserPlus, Users} from "lucide-react";
+import {useModal} from "@/hooks/use-modal-store";
 
 
 interface ServerHeaderProps {
@@ -17,6 +18,7 @@ interface ServerHeaderProps {
 }
 
 export const ServerHeader = ({server, role}: ServerHeaderProps) => {
+  const {onOpen} = useModal();
   const isAdmin = role === MemberRole.ADMIN;
   const isModerator = isAdmin || role === MemberRole.MODERATOR;
   return (
@@ -31,9 +33,11 @@ export const ServerHeader = ({server, role}: ServerHeaderProps) => {
         </button>
 
       </DropdownMenuTrigger>
-      <DropdownMenuContent className={"w-56 text-xs font-medium text-black dark:text-neutral-400 space-y-[2px]"}>
+      <DropdownMenuContent
+        className={"w-56 text-xs font-medium text-black dark:text-neutral-400 space-y-[2px]"}>
         {isModerator && (
           <DropdownMenuItem
+            onClick={() => onOpen("invite", {server})}
           className={"text-indigo-600 dark:text-indigo-400 px-3 py-2 text-sm cursor-pointer"}
           >
             Invite People
@@ -42,6 +46,7 @@ export const ServerHeader = ({server, role}: ServerHeaderProps) => {
         )}
         {isAdmin && (
           <DropdownMenuItem
+            onClick={() => onOpen("editServer", {server})}
             className={"px-3 py-2 text-sm cursor-pointer"}
           >
             Server Settings
@@ -50,6 +55,7 @@ export const ServerHeader = ({server, role}: ServerHeaderProps) => {
         )}
         {isAdmin && (
           <DropdownMenuItem
+            onClick={() => onOpen("members", {server})}
             className={"px-3 py-2 text-sm cursor-pointer"}
           >
             Manage Members
